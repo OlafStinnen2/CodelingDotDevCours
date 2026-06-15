@@ -1,15 +1,17 @@
-import os
 from groq import Groq
 
+from config import get_settings
 
-def initialize_client(groq_api_key: str) -> Groq:
+
+def initialize_client(api_key: str) -> Groq:
     """Initialize and return Groq client."""
-    return Groq(api_key=groq_api_key)
+    return Groq(api_key=api_key)
 
 
 def main():
     """Main function to run the chat completion."""
-    client = initialize_client(groq_api_key=os.environ.get("API_KEY", ""))
+    settings = get_settings()
+    client = initialize_client(api_key=settings.api_key)
 
     chat_completion = client.chat.completions.create(
         messages=[
@@ -18,7 +20,7 @@ def main():
                 "content": "Explain the importance of fast language models",
             }
         ],
-        model=os.environ.get("ORACLE_MODEL", ""),
+        model=settings.oracle_model,
     )
 
     print(chat_completion.choices[0].message.content)
