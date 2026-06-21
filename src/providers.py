@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from groq import Groq
+from config import get_settings
 
 class AIProvider(ABC):
     @abstractmethod
@@ -22,3 +23,11 @@ class GroqProvider(AIProvider):
         if content is None:
             return "No content generated."
         return content
+    
+def get_ai_provider():
+    settings = get_settings()
+    if settings.provider.lower() == "groq":
+        return GroqProvider(api_key=settings.api_key, oracle_model=settings.oracle_model)
+    else:
+        raise ValueError(f"Unsupported provider: {settings.provider}") 
+    
